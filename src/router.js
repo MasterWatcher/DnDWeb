@@ -2,9 +2,9 @@ import { createWebHistory, createRouter } from "vue-router";
 
 const routes =  [
   {
-    path: "/add",
-    name: "add",
-    component: () => import("./components/AddTutorial")
+    path: "/sheet",
+    name: "sheet",
+    component: () => import("./components/CharacterSheet")
   }
 ];
 
