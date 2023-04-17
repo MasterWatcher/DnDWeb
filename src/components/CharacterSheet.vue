@@ -3,27 +3,27 @@
   <header>
     <section class="charname">
       <label for="charname">Character Name</label>
-      <input name="charname" />
+      <input v-model="name" name="charname" />
     </section>
     <section class="misc">
       <ul>
         <li>
-          <label for="classlevel">Class & Level</label><input name="classlevel" placeholder="Paladin 2" />
+          <label for="classlevel">Class & Level</label><input v-model="classAndLevel" name="classlevel" placeholder="Paladin 2" />
         </li>
         <li>
-          <label for="background">Background</label><input name="background" placeholder="Acolyte" />
+          <label for="background">Background</label><input v-model="background" name="background" placeholder="Acolyte" />
         </li>
         <li>
-          <label for="playername">Player Name</label><input name="playername" placeholder="Player McPlayerface">
+          <label for="playername">Player Name</label><input v-model="playerName" name="playername" placeholder="Player McPlayerface">
         </li>
         <li>
-          <label for="race">Race</label><input name="race" placeholder="Half-elf" />
+          <label for="race">Race</label><input v-model="race" name="race" placeholder="Half-elf" />
         </li>
         <li>
-          <label for="alignment">Alignment</label><input name="alignment" placeholder="Lawful Good" />
+          <label for="alignment">Alignment</label><input v-model="alignment" name="alignment" placeholder="Lawful Good" />
         </li>
         <li>
-          <label for="experiencepoints">Experience Points</label><input name="experiencepoints" placeholder="3240" />
+          <label for="experiencepoints">Experience Points</label><input v-model.number="experience" name="experiencepoints" placeholder="3240" />
         </li>
       </ul>
     </section>
@@ -35,15 +35,15 @@
           <ul>
             <li>
               <div class="score">
-                <label for="Strengthscore">Strength</label><input name="Strengthscore" placeholder="10" />
+                <label for="Strengthscore">Strength</label><input v-model="abilities.strength" name="Strengthscore" placeholder="10" />
               </div>
               <div class="modifier">
-                <input name="Strengthmod" placeholder="+0" />
+                <input disabled v-model="strengthModifier" name="Strengthmod" placeholder="+0" />
               </div>
             </li>
             <li>
               <div class="score">
-                <label for="Dexterityscore">Dexterity</label><input name="Dexterityscore" placeholder="10" />
+                <label for="Dexterityscore">Dexterity</label><input v-model="abilities.dexterity" name="Dexterityscore" placeholder="10" />
               </div>
               <div class="modifier">
                 <input name="Dexteritymod" placeholder="+0" />
@@ -364,15 +364,47 @@
       </section>
     </section>
   </main>
+<div class="createcharacter-container">
+  <button @click="createCharacter" class="createcharacter" type="button">Create Character</button>
+</div>
 </form>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: "character-sheet",
   data() {
+    return {
+      name: '',
+      classAndLevel: '',
+      background: '',
+      playerName: '',
+      race: '',
+      alignment: '',
+      experience: 0,
+      abilities: {
+        strength: 5,
+        dexterity: 10
+      }
+    }
+  },
+  computed: {
+    strengthModifier() {
+      return Math.floor((this.abilities.strength - 10) / 2.0)
+    }
   },
   methods: {
+    createCharacter() {
+      axios.post('https://dnd-server.fly.dev/api/character', this.$data)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
   }
 };
 </script>
@@ -411,7 +443,6 @@ textarea
   
 input[type="checkbox"]
   cursor: pointer
-  margin-right: 5px
 
 div.box
   margin-top: $gutter
@@ -878,6 +909,7 @@ form.charsheet
                 height: $bubble-size
                 border: 1px solid black
                 border-radius: $bubble-size
+                margin-right: 5px
                 &:checked
                   background-color: black
                 
@@ -1004,5 +1036,22 @@ form.charsheet
         textarea
           border: 0
           padding: 5px
-          height: 43em
+          height: 545px
+
+div.createcharacter-container
+  display: flex
+  justify-content: center
+  text-align: center
+  margin-top: 40px
+  margin-bottom: 20px
+
+button.createcharacter
+  background-color: #4CAF50
+  border: none
+  color: white
+  padding: 15px 32px
+  text-align: center
+  text-decoration: none
+  display: inline-block
+  font-size: 16px
 </stype>
