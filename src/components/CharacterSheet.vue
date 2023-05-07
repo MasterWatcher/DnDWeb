@@ -35,10 +35,10 @@
           <ul>
             <li>
               <div class="score">
-                <label for="Strengthscore">Strength</label><input v-model="abilities.strength" name="Strengthscore" placeholder="10" />
+                <label for="Strengthscore">Strength</label><input v-model="abilities.strength" name="Strengthscore" placeholder="10"/>
               </div>
               <div class="modifier">
-                <input disabled v-model="strengthModifier" name="Strengthmod" placeholder="+0" />
+                <input disabled name="Strengthmod" placeholder="+0" :value= modifier(abilities.strength) />
               </div>
             </li>
             <li>
@@ -46,39 +46,39 @@
                 <label for="Dexterityscore">Dexterity</label><input v-model="abilities.dexterity" name="Dexterityscore" placeholder="10" />
               </div>
               <div class="modifier">
-                <input name="Dexteritymod" placeholder="+0" />
+                <input disabled name="Dexteritymod" placeholder="+0" :value= modifier(abilities.dexterity) />
               </div>
             </li>
             <li>
               <div class="score">
-                <label for="Constitutionscore">Constitution</label><input name="Constitutionscore" placeholder="10" />
+                <label for="Constitutionscore">Constitution</label><input v-model="abilities.сonstitution" name="Constitutionscore" placeholder="10" />
               </div>
               <div class="modifier">
-                <input name="Constitutionmod" placeholder="+0" />
+                <input disabled name="Constitutionmod" placeholder="+0" :value= modifier(abilities.сonstitution) />
               </div>
             </li>
             <li>
               <div class="score">
-                <label for="Wisdomscore">Wisdom</label><input name="Wisdomscore" placeholder="10" />
+                <label for="Wisdomscore">Wisdom</label><input v-model="abilities.wisdom" name="Wisdomscore" placeholder="10" />
               </div>
               <div class="modifier">
-                <input name="Wisdommod" placeholder="+0" />
+                <input disabled name="Wisdommod" placeholder="+0" :value= modifier(abilities.wisdom) />
               </div>
             </li>
             <li>
               <div class="score">
-                <label for="Intelligencescore">Intelligence</label><input name="Intelligencescore" placeholder="10" />
+                <label for="Intelligencescore">Intelligence</label><input v-model="abilities.intelligence" name="Intelligencescore" placeholder="10" />
               </div>
               <div class="modifier">
-                <input name="Intelligencemod" placeholder="+0" />
+                <input disabled name="Intelligencemod" placeholder="+0" :value= modifier(abilities.intelligence) />
               </div>
             </li>
             <li>
               <div class="score">
-                <label for="Charismascore">Charisma</label><input name="Charismascore" placeholder="10" />
+                <label for="Charismascore">Charisma</label><input v-model="abilities.charisma" name="Charismascore" placeholder="10" />
               </div>
               <div class="modifier">
-                <input name="Charismamod" placeholder="+0" />
+                <input disabled name="Charismamod" placeholder="+0" :value= modifier(abilities.charisma) />
               </div>
             </li>
           </ul>
@@ -385,17 +385,24 @@ export default {
       alignment: '',
       experience: 0,
       abilities: {
-        strength: 5,
-        dexterity: 10
+        strength: null,
+        dexterity: null,
+        сonstitution: null,
+        intelligence: null,
+        wisdom: null,
+        charisma: null,
       }
     }
   },
-  computed: {
-    strengthModifier() {
-      return Math.floor((this.abilities.strength - 10) / 2.0)
-    }
-  },
   methods: {
+     modifier(ability) {
+      if (ability === null) {
+        return null
+      } else {
+        return Math.floor((ability - 10) / 2.0)
+      }
+    },
+
     createCharacter() {
       axios.post('https://dnd-server.fly.dev/api/character', this.$data)
       .then(response => {
