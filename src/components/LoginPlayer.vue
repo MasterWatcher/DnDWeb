@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="my-container">
     <h2 class="login-title">Greetings, adventurer!<br>Please introduce yourself</h2>
 
     <form class="login-form">
@@ -14,7 +14,7 @@
         />
       </div>
 
-      <button @click="login" class="btn btn--form" type="button">
+      <button @click="login" class="my-btn btn--form" type="button">
         Enter the Realm
       </button>
     </form>
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+  import axios from 'axios';
+
   export default {
     name: "login-player",
     data() {
@@ -29,14 +31,22 @@
         name: ''
       }
     },
-    mounted() {
-      this.$data.name = this.$cookies.get('playerName')
-    },
     methods: {
       login() {
-        this.$cookies.set('playerName',this.$data.name);
-      }
-    }
+       axios.get('http://127.0.0.1:1337/api/player', {
+        params: {
+          name: this.$data.name
+        }
+      })
+       .then(response => {
+         this.$cookies.set('player', response.data);
+         this.$router.push('/home')
+      })
+       .catch(error => {
+        console.error(error);
+      });
+     }
+   }
   }
 </script>
 
@@ -46,8 +56,8 @@ body
   line-height: 1.4
   display: flex
 
-.container
-  width: 400px
+.my-container
+  width: 500px
   margin: auto
   padding: 36px 48px 48px 48px
   background-color: #f2efee
@@ -89,7 +99,7 @@ body
   align-self: end
   padding: 8px
 
-.btn
+.my-btn
   display: inline-block
   text-decoration: none
   font-size: 20px

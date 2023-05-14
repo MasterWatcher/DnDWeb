@@ -3,27 +3,39 @@
   <header>
     <section class="charname">
       <label for="charname">Character Name</label>
-      <input v-model="name" name="charname" />
+      <input v-model="character.name" name="charname" />
     </section>
     <section class="misc">
       <ul>
         <li>
-          <label for="classlevel">Class & Level</label><input v-model="classAndLevel" name="classlevel" placeholder="Paladin 2" />
+          <label for="classlevel">Class & Level</label>
+          <div class="class-container">
+          <select classes v-model="character.class" class="select-input">
+            <option v-for="(item, index) in config.classes" :value="item" :key="index"> {{item}} </option>
+          </select>
+          <label for="level">{{ level(character.experience) }}</label>
+        </div>
         </li>
         <li>
-          <label for="background">Background</label><input v-model="background" name="background" placeholder="Acolyte" />
+          <label for="background">Background</label><input v-model="character.background" name="background" placeholder="Acolyte" />
         </li>
         <li>
-          <label for="playername">Player Name</label><input v-model="playerName" name="playername" placeholder="Player McPlayerface">
+          <label for="playername">Player Name</label><input disabled v-model="character.playerName" name="playername" placeholder="Player McPlayerface">
         </li>
         <li>
-          <label for="race">Race</label><input v-model="race" name="race" placeholder="Half-elf" />
+          <label for="race">Race</label>
+          <select classes v-model="character.race" class="select-input">
+            <option v-for="(item, index) in config.races" :value="item" :key="index"> {{item}} </option>
+          </select>
         </li>
         <li>
-          <label for="alignment">Alignment</label><input v-model="alignment" name="alignment" placeholder="Lawful Good" />
+          <label for="alignment">Alignment</label>
+          <select classes v-model="character.alignment" class="select-input">
+            <option v-for="(item, index) in config.alignments" :value="item" :key="index"> {{item}} </option>
+          </select>
         </li>
         <li>
-          <label for="experiencepoints">Experience Points</label><input v-model.number="experience" name="experiencepoints" placeholder="3240" />
+          <label for="experiencepoints">Experience Points</label><input v-model.number="character.experience" name="experiencepoints" placeholder="3240" />
         </li>
       </ul>
     </section>
@@ -35,50 +47,50 @@
           <ul>
             <li>
               <div class="score">
-                <label for="Strengthscore">Strength</label><input v-model="abilities.strength" name="Strengthscore" placeholder="10"/>
+                <label for="Strengthscore">Strength</label><input v-model.number="character.abilities.strength" name="Strengthscore" placeholder="10"/>
               </div>
               <div class="modifier">
-                <input disabled name="Strengthmod" placeholder="+0" :value= modifier(abilities.strength) />
+                <input disabled name="Strengthmod" placeholder="+0" :value= modifier(character.abilities.strength) />
               </div>
             </li>
             <li>
               <div class="score">
-                <label for="Dexterityscore">Dexterity</label><input v-model="abilities.dexterity" name="Dexterityscore" placeholder="10" />
+                <label for="Dexterityscore">Dexterity</label><input v-model.number="character.abilities.dexterity" name="Dexterityscore" placeholder="10" />
               </div>
               <div class="modifier">
-                <input disabled name="Dexteritymod" placeholder="+0" :value= modifier(abilities.dexterity) />
+                <input disabled name="Dexteritymod" placeholder="+0" :value= modifier(character.abilities.dexterity) />
               </div>
             </li>
             <li>
               <div class="score">
-                <label for="Constitutionscore">Constitution</label><input v-model="abilities.сonstitution" name="Constitutionscore" placeholder="10" />
+                <label for="Constitutionscore">Constitution</label><input v-model.number="character.abilities.constitution" name="Constitutionscore" placeholder="10" />
               </div>
               <div class="modifier">
-                <input disabled name="Constitutionmod" placeholder="+0" :value= modifier(abilities.сonstitution) />
+                <input disabled name="Constitutionmod" placeholder="+0" :value= modifier(character.abilities.constitution) />
               </div>
             </li>
             <li>
               <div class="score">
-                <label for="Wisdomscore">Wisdom</label><input v-model="abilities.wisdom" name="Wisdomscore" placeholder="10" />
+                <label for="Wisdomscore">Wisdom</label><input v-model.number="character.abilities.wisdom" name="Wisdomscore" placeholder="10" />
               </div>
               <div class="modifier">
-                <input disabled name="Wisdommod" placeholder="+0" :value= modifier(abilities.wisdom) />
+                <input disabled name="Wisdommod" placeholder="+0" :value= modifier(character.abilities.wisdom) />
               </div>
             </li>
             <li>
               <div class="score">
-                <label for="Intelligencescore">Intelligence</label><input v-model="abilities.intelligence" name="Intelligencescore" placeholder="10" />
+                <label for="Intelligencescore">Intelligence</label><input v-model.number="character.abilities.intelligence" name="Intelligencescore" placeholder="10" />
               </div>
               <div class="modifier">
-                <input disabled name="Intelligencemod" placeholder="+0" :value= modifier(abilities.intelligence) />
+                <input disabled name="Intelligencemod" placeholder="+0" :value= modifier(character.abilities.intelligence) />
               </div>
             </li>
             <li>
               <div class="score">
-                <label for="Charismascore">Charisma</label><input v-model="abilities.charisma" name="Charismascore" placeholder="10" />
+                <label for="Charismascore">Charisma</label><input v-model.number="character.abilities.charisma" name="Charismascore" placeholder="10" />
               </div>
               <div class="modifier">
-                <input disabled name="Charismamod" placeholder="+0" :value= modifier(abilities.charisma) />
+                <input disabled name="Charismamod" placeholder="+0" :value= modifier(character.abilities.charisma) />
               </div>
             </li>
           </ul>
@@ -377,22 +389,49 @@ export default {
   name: "character-sheet",
   data() {
     return {
-      name: '',
-      classAndLevel: '',
-      background: '',
-      playerName: '',
-      race: '',
-      alignment: '',
-      experience: 0,
-      abilities: {
+      config: {
+        classes: [],
+        races: [],
+        alignments: [],
+      },
+      character: {
+       name: '',
+       'class': '',
+       background: '',
+       playerName: '',
+       race: '',
+       alignment: '',
+       experience: 0,
+       abilities: {
         strength: null,
         dexterity: null,
-        сonstitution: null,
+        constitution: null,
         intelligence: null,
         wisdom: null,
         charisma: null,
       }
     }
+  }
+  },
+  mounted() {
+    this.$data.character.playerName = this.$cookies.get('player').name
+    axios.get('http://127.0.0.1:1337/api/create-character-config')
+    .then(response => {
+     this.$data.config = response.data
+   })
+    .catch(error => {
+      console.error(error);
+    });
+
+    let playerID = this.$cookies.get('player').id
+    axios.get('http://127.0.0.1:1337/api/player/' + playerID + '/character')
+    .then(response => {
+     console.log(response.data)
+     this.$data.character = response.data
+   })
+    .catch(error => {
+      console.error(error);
+    });
   },
   methods: {
      modifier(ability) {
@@ -403,8 +442,35 @@ export default {
       }
     },
 
+    level(experience) {
+      switch (true) {
+      case experience < 300: return 1;
+      case experience < 900: return 2;
+      case experience < 2700: return 3;
+      case experience < 6500: return 4;
+      case experience < 14000: return 5;
+      case experience < 23000: return 6;
+      case experience < 34000: return 7;
+      case experience < 48000: return 8;
+      case experience < 64000: return 9;
+      case experience < 85000: return 10;
+      case experience < 100000: return 11;
+      case experience < 120000: return 12;
+      case experience < 140000: return 13;
+      case experience < 165000: return 14;
+      case experience < 195000: return 15;
+      case experience < 225000: return 16;
+      case experience < 265000: return 17;
+      case experience < 305000: return 18;
+      case experience < 355000: return 19;
+      default: return 20;
+      }
+    },
+
     createCharacter() {
-      axios.post('https://dnd-server.fly.dev/api/character', this.$data)
+      let playerID = this.$cookies.get('player').id
+      axios.post('http://127.0.0.1:1337/api/player/' + playerID + '/character', this.$data.character)
+      //axios.post('https://dnd-server.fly.dev/api/character', this.$data)
       .then(response => {
         console.log(response);
       })
@@ -437,7 +503,12 @@ $large-box-width: 70px
   
 .hide
   display: none !important
-  
+
+class-container
+  label 
+    display: inline-block
+    text-align: right
+
 textarea
   font-size: 12px
   text-align: left
