@@ -13,7 +13,7 @@
           <select classes v-model="character.class" class="select-input">
             <option v-for="(item, index) in config.classes" :value="item" :key="index"> {{item}} </option>
           </select>
-          <label for="level">{{ level(character.experience) }}</label>
+          <input disabled name="level" class="input-level" placeholder="0" :value= level(character.experience) />
         </div>
         </li>
         <li>
@@ -504,10 +504,24 @@ $large-box-width: 70px
 .hide
   display: none !important
 
-class-container
-  label 
+div.class-container
+  display: flex
+  align-items: center
+  
+  input.input-level
     display: inline-block
-    text-align: right
+    width: auto
+
+select.select-input
+   border: none
+   outline: none
+   border-bottom: 1px solid $faded
+   -webkit-appearance: none
+    -moz-appearance: none
+    appearance: none
+
+label.label-level 
+    border-bottom: 1px solid $faded
 
 textarea
   font-size: 12px

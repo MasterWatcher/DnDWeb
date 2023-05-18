@@ -54,7 +54,6 @@
 body
   font-family: sans-serif
   line-height: 1.4
-  display: flex
 
 .my-container
   width: 500px

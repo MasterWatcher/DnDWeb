@@ -2,22 +2,9 @@
 <template>
  <div>
   <nav v-bind:class="active" v-on:click.prevent>
-    <router-link
-    to="sheet"
-    class="nav-item nav-link"
-    active-class="active"
-    exact
-    >
-    Sheet
-  </router-link>
-  <router-link
-  to="actions"
-  class="nav-item nav-link"
-  active-class="active"
-  exact
-  >
-  Actions
-</router-link>
+    <div class="menu-item"><router-link to="/sheet">Sheet</router-link></div>
+    <div class="menu-item"><router-link to="/actions">Actions</router-link></div>
+     <div class="menu-item-right"><UserTab :title="username"/> </div>
 </nav>
 <main class="container">
  <router-view></router-view> 
@@ -28,71 +15,44 @@
 <script>
 //import 'bootstrap'
 //import 'bootstrap/dist/css/bootstrap.min.css'
+import UserTab from '../components/UserTab'
 export default {
+   components: {
+    UserTab
+  },
+  data() {
+    return {
+      username: "12"
+    };
+  },
   mounted() {
+     this.$data.username = this.$cookies.get('player').name
     this.$router.push('/sheet')
   }
 }
 </script>
 
 <style>
-
-
-nav{
-  display:inline-block;
-  margin:60px auto 45px;
-  background-color:#5597b4;
-  box-shadow:0 1px 1px #ccc;
-  border-radius:2px;
+nav {
+  width: 100vw;
+  background-color: #0d0d0e;
 }
-
-nav a{
-  display:inline-block;
-  padding: 18px 30px;
-  color:#fff !important;
-  font-weight:bold;
-  font-size:16px;
-  text-decoration:none !important;
-  line-height:1;
-  text-transform: uppercase;
-  background-color:transparent;
-
-  -webkit-transition:background-color 0.25s;
-  -moz-transition:background-color 0.25s;
-  transition:background-color 0.25s;
+nav .menu-item {
+  color: #FFF;
+  padding: 25px 40px;
+  position: relative;
+  text-align: center;
+  border-bottom: 5px solid transparent;
+  display: flex;
+  transition: 0.4s;
+  display: inline-block;
 }
-
-nav a:first-child{
-  border-radius:2px 0 0 2px;
+nav .menu-item a {
+  color: inherit;
+  text-decoration: none;
 }
-
-nav a:last-child{
-  border-radius:0 2px 2px 0;
-}
-
-nav.home .home,
-nav.projects .projects,
-nav.services .services,
-nav.contact .contact{
-  background-color:#e35885;
-}
-
-p{
-  font-size:22px;
-  font-weight:bold;
-  color:#7d9098;
-}
-
-p b{
-  color:#ffffff;
-  display:inline-block;
-  padding:5px 10px;
-  background-color:#c4d7e0;
-  border-radius:2px;
-  text-transform:uppercase;
-  font-size:18px;
-}
-.resource {
-  margin: 20px 0;
+nav .menu-item-right {
+  float: right;
+  text-align: right;
 }
 </style>
