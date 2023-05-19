@@ -415,7 +415,7 @@ export default {
   },
   mounted() {
     this.$data.character.playerName = this.$cookies.get('player').name
-    axios.get('http://127.0.0.1:1337/api/create-character-config')
+    axios.get(this.dndHost + '/api/create-character-config')
     .then(response => {
      this.$data.config = response.data
    })
@@ -424,7 +424,7 @@ export default {
     });
 
     let playerID = this.$cookies.get('player').id
-    axios.get('http://127.0.0.1:1337/api/player/' + playerID + '/character')
+    axios.get(this.dndHost + '/api/player/' + playerID + '/character')
     .then(response => {
      console.log(response.data)
      this.$data.character = response.data
@@ -469,8 +469,7 @@ export default {
 
     createCharacter() {
       let playerID = this.$cookies.get('player').id
-      axios.post('http://127.0.0.1:1337/api/player/' + playerID + '/character', this.$data.character)
-      //axios.post('https://dnd-server.fly.dev/api/character', this.$data)
+      axios.post(this.dndHost + '/api/player/' + playerID + '/character', this.$data.character)
       .then(response => {
         console.log(response);
       })

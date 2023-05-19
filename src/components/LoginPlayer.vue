@@ -33,7 +33,8 @@
     },
     methods: {
       login() {
-       axios.get('http://127.0.0.1:1337/api/player', {
+        console.log(this.dndHost)
+       axios.get(this.dndHost + '/api/player', {
         params: {
           name: this.$data.name
         }
